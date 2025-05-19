@@ -55,6 +55,19 @@ app.post('/api/persons', (request, response) => {
     number: request.body.number,
   }
 
+  if (!newPerson.name) {
+    return response.status(400).json({ "error": "name is missing" })
+  }
+  if (persons.map(p => p.name).includes(newPerson.name)) {
+    return response.status(400).json({ "error": "name must be unique" })
+  }
+  if (!newPerson.number) {
+    return response.status(400).json({ "error": "number is missing" })
+  }
+  if (persons.map(p => p.number).includes(newPerson.number)) {
+    return response.status(400).json({ "error": "number must be unique" })
+  }
+
   persons = persons.concat(newPerson)
   return response.send(newPerson)
 })
