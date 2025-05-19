@@ -1,0 +1,3 @@
+### Delete a person from the phonebook
+@id = 1
+DELETE http://localhost:3001/api/persons/{{id}}
