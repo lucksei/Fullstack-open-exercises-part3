@@ -1,0 +1,25 @@
+{
+  "name": "fullstack-open-course-part3",
+  "version": "1.0.0",
+  "description": "First commit, change later?",
+  "homepage": "https://github.com/lucksei/Fullstack-open-exercises-part3#readme",
+  "bugs": {
+    "url": "https://github.com/lucksei/Fullstack-open-exercises-part3/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucksei/Fullstack-open-exercises-part3.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
