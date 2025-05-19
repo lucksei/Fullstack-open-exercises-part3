@@ -1,0 +1,8 @@
+### Create a new person in the phonebook
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "testing",
+    "number": "54-358-5979985" 
+}
