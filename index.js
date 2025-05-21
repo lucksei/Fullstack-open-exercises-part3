@@ -4,9 +4,20 @@ const morgan = require('morgan')
 
 const app = express()
 
-// Configure morgan logger
+// ###################
+// *** Middlewares ***
+// ###################
+
+// Parse incoming requests with JSON payloads
 app.use(express.json())
+
+// Enable CORS
 app.use(cors())
+
+// serve frontend static files
+app.use(express.static('dist'))
+
+// Configure morgan logger
 app.use(morgan((tokens, request, response) => {
   return [
     tokens.method(request, response),
@@ -16,9 +27,9 @@ app.use(morgan((tokens, request, response) => {
     tokens['response-time'](request, response), 'ms',
     JSON.stringify(request.body),
   ].join(' ')
-
 }))
 
+// Initialize persons array
 let persons = [
   {
     "id": "1",
@@ -42,6 +53,10 @@ let persons = [
   }
 ]
 
+// ##############
+// *** Routes ***
+// ##############
+
 app.get('/info', (request, response) => {
   const timestamp = new Date(Date.now());
   response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${timestamp.toTimeString()}</p>`)
@@ -61,10 +76,7 @@ app.get('/api/persons/:id', (request, response) => {
 // Fix the delete method
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  console.log(id, typeof id)
-  console.log(persons)
   persons = persons.filter(person => person.id !== id)
-  console.log(persons)
   response.status(204).end()
 })
 

@@ -1,0 +1,20 @@
+# Node.js
+node_modules/
+npm-debug.log*
+package-lock.json
+
+# Logs
+logs
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Optional npm cache directory
+.npm
+
+# Environment variables
+.env
+
+#IDE
+.idea
