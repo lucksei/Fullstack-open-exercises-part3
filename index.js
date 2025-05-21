@@ -1,9 +1,12 @@
 const express = require('express')
+const cors = require('cors')
 const morgan = require('morgan')
-// const JSON = require('JSON')
+
 const app = express()
 
+// Configure morgan logger
 app.use(express.json())
+app.use(cors())
 app.use(morgan((tokens, request, response) => {
   return [
     tokens.method(request, response),
@@ -55,15 +58,19 @@ app.get('/api/persons/:id', (request, response) => {
   response.json(person)
 })
 
+// Fix the delete method
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
+  console.log(id, typeof id)
+  console.log(persons)
   persons = persons.filter(person => person.id !== id)
+  console.log(persons)
   response.status(204).end()
 })
 
 app.post('/api/persons', (request, response) => {
   const newPerson = {
-    id: Math.floor(Math.random() * 10000),
+    id: Math.floor(Math.random() * 10000).toString(),
     name: request.body.name,
     number: request.body.number,
   }
