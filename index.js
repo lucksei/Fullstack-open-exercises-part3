@@ -1,6 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
+const Person = require('./models/person')
+const person = require('./models/person')
 
 const app = express()
 
@@ -63,17 +66,18 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  const person = persons.find(person => person.id === id)
-  if (!person) response.status(404).end()
-  response.json(person)
+  Person.findById(id).then(person => {
+    response.json(person)
+  })
 })
 
-// Fix the delete method
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   persons = persons.filter(person => person.id !== id)
@@ -81,27 +85,30 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-  const newPerson = {
-    id: Math.floor(Math.random() * 10000).toString(),
+  let newPerson = new Person({
     name: request.body.name,
-    number: request.body.number,
-  }
+    number: request.body.number
+  })
 
   if (!newPerson.name) {
     return response.status(400).json({ "error": "name is missing" })
   }
-  if (persons.map(p => p.name).includes(newPerson.name)) {
-    return response.status(400).json({ "error": "name must be unique" })
-  }
   if (!newPerson.number) {
     return response.status(400).json({ "error": "number is missing" })
   }
-  if (persons.map(p => p.number).includes(newPerson.number)) {
-    return response.status(400).json({ "error": "number must be unique" })
-  }
 
-  persons = persons.concat(newPerson)
-  return response.send(newPerson)
+  // if (persons.map(p => p.name).includes(newPerson.name)) {
+  //   return response.status(400).json({ "error": "name must be unique" })
+  // }
+  // if (persons.map(p => p.number).includes(newPerson.number)) {
+  //   return response.status(400).json({ "error": "number must be unique" })
+  // }
+
+  newPerson.save()
+    .then(savedPerson => {
+      response.json(savedPerson)
+    })
+
 })
 
 const PORT = 3001
