@@ -132,6 +132,28 @@ app.post('/api/persons', (request, response) => {
 
 })
 
+app.put('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (!person) {
+        return response.status(404).end()
+      }
+
+      if (!person.number) {
+        return response.status(400).json({ "error": "number is missing" })
+      }
+
+      person.number = request.body.number
+
+      return person.save()
+        .then(updatedPerson => {
+          response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+    })
+})
+
+// Invoke error handler middleware
 app.use(errorHandler)
 
 const PORT = 3001
