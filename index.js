@@ -110,24 +110,20 @@ app.post('/api/persons', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  Person.findById(request.params.id)
-    .then(person => {
-      if (!person) {
-        return response.status(404).end()
-      }
-
-      if (!person.number) {
-        return response.status(400).json({ "error": "number is missing" })
-      }
-
-      person.number = request.body.number
-
-      return person.save()
-        .then(updatedPerson => {
-          response.json(updatedPerson)
-        })
-        .catch(error => next(error))
+  Person.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    {
+      new: true, // return the updated document
+      runValidators: true, // validate before update
     })
+    .then(updatedPerson => {
+      if (!updatedPerson) {
+        response.status(404).end()
+      }
+      response.send(updatedPerson)
+    })
+    .catch(error => next(error))
 })
 
 // Invoke error handler middleware
