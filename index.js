@@ -3,7 +3,6 @@ const express = require('express')
 const cors = require('cors')
 const morgan = require('morgan')
 const Person = require('./models/person')
-const person = require('./models/person')
 
 const app = express()
 
@@ -52,10 +51,11 @@ const errorHandler = (error, request, response, next) => {
 // ##############
 
 // NOTE: Does not use mongoDB
-app.get('/info', (request, response) => {
-  const timestamp = new Date(Date.now());
-  response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${timestamp.toTimeString()}</p>`)
-})
+// TODO: Update to use mongoDB
+// app.get('/info', (request, response) => {
+//   const timestamp = new Date(Date.now());
+//   response.send(`<p>Phonebook has info for ${persons.length} people</p><p>${timestamp.toTimeString()}</p>`)
+// })
 
 app.get('/api/persons', (request, response, next) => {
   Person.find({})
@@ -79,7 +79,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   return Person.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -92,14 +92,14 @@ app.post('/api/persons', (request, response, next) => {
   })
 
   if (!newPerson.name) {
-    return response.status(400).json({ "error": "name is missing" })
+    return response.status(400).json({ 'error': 'name is missing' })
   }
   if (!newPerson.number) {
-    return response.status(400).json({ "error": "number is missing" })
+    return response.status(400).json({ 'error': 'number is missing' })
   }
 
   // if (Person.find({ number: newPerson.number })) {
-  //   return response.status(400).json({ "error": "number must be unique" })
+  //   return response.status(400).json({ 'error': 'number must be unique' })
   // }
 
   newPerson.save()
